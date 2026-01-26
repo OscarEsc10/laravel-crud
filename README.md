@@ -1,59 +1,245 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel User CRUD Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern, responsive User CRUD (Create, Read, Update, Delete) application built with Laravel 12, PostgreSQL, and Tailwind CSS.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Full CRUD Operations**: Create, read, update, and delete users
+- **Modern UI**: Beautiful interface with Tailwind CSS
+- **Enhanced Notifications**: SweetAlert2 for success/error messages and confirmations
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Database Integration**: PostgreSQL with optimized schema
+- **Soft Deletes**: Users are soft-deleted for data integrity
+- **Validation**: Comprehensive form validation
+- **Pagination**: Efficient data handling with paginated user lists
+- **Custom Favicon**: Branded browser tab icon
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP ^8.2
+- Composer
+- Node.js & npm
+- PostgreSQL
+- Git
 
-## Learning Laravel
+## 🛠️ Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/OscarEsc10/laravel-crud.git
+   cd laravel-crud
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
 
-## Laravel Sponsors
+3. **Install Node.js dependencies**
+   ```bash
+   npm install
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-### Premium Partners
+5. **Configure database**
+   
+   Edit your `.env` file with your PostgreSQL credentials:
+   ```env
+   DB_CONNECTION=pgsql
+   DB_HOST=127.0.0.1
+   DB_PORT=5432
+   DB_DATABASE=Crud-PHP
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+6. **Run migrations**
+   ```bash
+   php artisan migrate
+   ```
 
-## Contributing
+7. **Create the users table**
+   
+   If you need to create the table manually, run this SQL:
+   ```sql
+   CREATE TABLE users (
+       uid BIGSERIAL PRIMARY KEY,
+       username VARCHAR(100) NOT NULL,
+       email VARCHAR(150) NOT NULL UNIQUE,
+       password_hash VARCHAR(255) NOT NULL,
+       role VARCHAR(50) NOT NULL DEFAULT 'user',
+       is_active BOOLEAN NOT NULL DEFAULT TRUE,
+       email_verified_at TIMESTAMP NULL,
+       last_login_at TIMESTAMP NULL,
+       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+       updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+       deleted_at TIMESTAMP NULL
+   );
+   
+   CREATE INDEX idx_users_username ON users(username);
+   CREATE INDEX idx_users_active ON users(is_active);
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🚀 Running the Application
 
-## Code of Conduct
+1. **Start the development server**
+   ```bash
+   php artisan serve
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. **Start the frontend assets**
+   ```bash
+   npm run dev
+   ```
 
-## Security Vulnerabilities
+3. **Access the application**
+   
+   Open your browser and navigate to: `http://localhost:8000`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📁 Project Structure
 
-## License
+```
+laravel-crud/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── UserController.php      # Main CRUD controller
+│   │   │   └── Web/
+│   │   │       └── HomeController.php   # Home page controller
+│   │   └── ...
+│   └── Models/
+│       └── User.php                    # User model
+├── database/
+│   └── migrations/
+│       └── 0001_01_01_000000_create_users_table.php
+├── resources/
+│   └── views/
+│       ├── layouts/
+│       │   └── app.blade.php           # Main layout
+│       └── users/
+│           ├── index.blade.php         # User list
+│           ├── create.blade.php        # Create user form
+│           ├── edit.blade.php          # Edit user form
+│           └── show.blade.php          # User details
+├── public/
+│   └── user-crud-php.png               # Favicon
+└── routes/
+    └── web.php                         # Application routes
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🎯 Routes
+
+| Method | URI | Name | Description |
+|--------|-----|------|-------------|
+| GET | `/` | `home` | Home page (users list) |
+| GET | `/users` | `users.index` | List all users |
+| GET | `/users/create` | `users.create` | Show create user form |
+| POST | `/users` | `users.store` | Store new user |
+| GET | `/users/{id}` | `users.show` | Show user details |
+| GET | `/users/{id}/edit` | `users.edit` | Show edit user form |
+| PUT/PATCH | `/users/{id}` | `users.update` | Update user |
+| DELETE | `/users/{id}` | `users.destroy` | Delete user (soft delete) |
+
+## 📊 Database Schema
+
+### Users Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `uid` | BIGSERIAL | Primary key |
+| `username` | VARCHAR(100) | User's username |
+| `email` | VARCHAR(150) | User's email (unique) |
+| `password_hash` | VARCHAR(255) | Hashed password |
+| `role` | VARCHAR(50) | User role (user/admin/moderator) |
+| `is_active` | BOOLEAN | Account status |
+| `email_verified_at` | TIMESTAMP | Email verification timestamp |
+| `last_login_at` | TIMESTAMP | Last login timestamp |
+| `created_at` | TIMESTAMP | Creation timestamp |
+| `updated_at` | TIMESTAMP | Last update timestamp |
+| `deleted_at` | TIMESTAMP | Soft delete timestamp |
+
+## 🎨 UI Features
+
+- **SweetAlert2**: Beautiful notifications and confirmations
+- **Tailwind CSS**: Modern, utility-first CSS framework
+- **Responsive Design**: Mobile-friendly interface
+- **Custom Favicon**: Branded browser tab icon
+- **Hover Effects**: Interactive UI elements
+- **Form Validation**: Real-time validation feedback
+
+## 🔧 Technologies Used
+
+- **Backend**: Laravel 12, PHP 8.2+
+- **Database**: PostgreSQL
+- **Frontend**: Blade, Tailwind CSS, SweetAlert2
+- **Build Tools**: Vite, npm
+- **Version Control**: Git
+
+## 📝 Validation Rules
+
+### Create User
+- `username`: Required, max 100 characters
+- `email`: Required, valid email, unique
+- `password_hash`: Required, min 6 characters
+- `role`: Optional, must be one of: user, admin, moderator
+- `is_active`: Optional, boolean
+
+### Update User
+- `username`: Sometimes required, max 100 characters
+- `email`: Sometimes required, valid email, unique (except current user)
+- `password_hash`: Sometimes required, min 6 characters
+- `role`: Sometimes required, must be one of: user, admin, moderator
+- `is_active`: Sometimes required, boolean
+
+## 🚀 Deployment
+
+1. **Configure production environment**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```
+
+2. **Install dependencies**
+   ```bash
+   composer install --no-dev --optimize-autoloader
+   npm install --production
+   npm run build
+   ```
+
+3. **Run migrations**
+   ```bash
+   php artisan migrate --force
+   ```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👤 Author
+
+**OscarEsc10**
+- GitHub: [@OscarEsc10](https://github.com/OscarEsc10)
+- Project: [Laravel CRUD](https://github.com/OscarEsc10/laravel-crud)
+
+## 🙏 Acknowledgments
+
+- [Laravel](https://laravel.com) - The PHP Framework For Web Artisans
+- [Tailwind CSS](https://tailwindcss.com) - A utility-first CSS framework
+- [SweetAlert2](https://sweetalert2.github.io) - Beautiful, responsive, customizable JavaScript popup boxes
+- [PostgreSQL](https://www.postgresql.org) - The World's Most Advanced Open Source Relational Database
