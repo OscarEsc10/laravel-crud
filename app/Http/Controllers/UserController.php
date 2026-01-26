@@ -14,8 +14,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all()->paginate(10);
-        return response()->json($users);
+        $users = User::paginate(10);
+        return view('users.index', compact('users'));
     }
 
     /**
@@ -23,16 +23,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return response()->json([
-            'message' => 'Show user creation form',
-            'fields' => [
-                'username' => 'string (required)',
-                'email' => 'email (required, unique)',
-                'password_hash' => 'string (required)',
-                'role' => 'string (default: user)',
-                'is_active' => 'boolean (default: true)'
-            ]
-        ]);
+        return view('users.create');
     }
 
     /**
@@ -49,7 +40,9 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
         }
 
         $data = $request->all();
@@ -57,8 +50,9 @@ class UserController extends Controller
         $data['is_active'] = $data['is_active'] ?? true;
         $data['role'] = $data['role'] ?? 'user';
 
-        $user = User::create($data);
-        return response()->json($user, 201);
+        User::create($data);
+        return redirect()->route('users.index')
+            ->with('success', 'User created successfully!');
     }
 
     /**
@@ -68,9 +62,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return redirect()->route('users.index')
+                ->with('error', 'User not found');
         }
-        return response()->json($user);
+        return view('users.show', compact('user'));
     }
 
     /**
@@ -80,19 +75,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return redirect()->route('users.index')
+                ->with('error', 'User not found');
         }
-        return response()->json([
-            'message' => 'Show user edit form',
-            'user' => $user,
-            'fields' => [
-                'username' => 'string',
-                'email' => 'email',
-                'password_hash' => 'string',
-                'role' => 'string',
-                'is_active' => 'boolean'
-            ]
-        ]);
+        return view('users.edit', compact('user'));
     }
 
     /**
@@ -102,7 +88,8 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return redirect()->route('users.index')
+                ->with('error', 'User not found');
         }
 
         $validator = Validator::make($request->all(), [
@@ -114,7 +101,9 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
         }
 
         $data = $request->all();
@@ -123,7 +112,8 @@ class UserController extends Controller
         }
 
         $user->update($data);
-        return response()->json($user);
+        return redirect()->route('users.index')
+            ->with('success', 'User updated successfully!');
     }
 
     /**
@@ -133,10 +123,12 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return redirect()->route('users.index')
+                ->with('error', 'User not found');
         }
 
         $user->delete(); // Soft delete
-        return response()->json(['message' => 'User deleted successfully']);
+        return redirect()->route('users.index')
+            ->with('success', 'User deleted successfully!');
     }
 }
